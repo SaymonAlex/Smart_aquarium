@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Smart Аквариум</title>
+  <link rel="icon" href="aquarium1.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+  <link rel="stylesheet" href="all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="bg-gradient"></div>
+  <header>
+    <h1>Управление Аквариумом</h1>
+  </header>
+
+  <main>
+    <section class="card aquarium">
+      <div class="aquastatus">
+        <h2>Аквариум</h2>
+        <div class="signal_val">
+          <p class="text_sig">WI-FI:</p>
+          <p class="wifi_val"><span id="signal_wifi">--</span>%</p>
+          <div class="wifi_on" id="status_wifi"></div>
+        </div>
+      </div>
+      <div class="tank">
+        <div class="led-strip" id="led-strip"></div>
+        <div class="water" id="water">
+          <div class="bubbles" id="bubbles"></div>
+          <!-- Рыбки -->
+          <div class="fish fish1" style="animation-duration:35s;">
+            <img src="fish_b1.png" alt="Fish 1">
+          </div>
+          <div class="fish fish2" style="animation-duration:25s;">
+            <img src="fish_b2.png" alt="Fish 2">
+          </div>
+          <div class="fish fish3" style="animation-duration:18s;">
+            <img src="fish_b3.png" alt="Fish 3">
+          </div>
+          <div class="fish fish4" style="animation-duration:30s;">
+            <img src="fish_b4.png" alt="Fish 4">
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="card controls">
+      <h2>Управление</h2>
+      <div class="control-row">
+        <div class="control">
+          <label class="light_txt">Свет</label>
+          <div class="light-controls">
+            <button id="light-toggle" class="btn btn-circle">
+              <i class="fas fa-power-off text-inset"></i>
+            </button>
+            <div class="hue">
+              <span id="hue-value">200°</span>
+              <input id="hue-slider" type="range" min="0" max="360" value="200">
+            </div>
+            <div class="brightness">
+              <span id="brightness-value">100%</span>
+              <input id="brightness-slider" type="range" min="0" max="100" value="100">
+            </div>
+          </div>
+        </div>
+
+        <div class="control">
+          <label class="pump_txt">Кислород</label>
+          <button id="pump-toggle" class="btn btn-circle">
+            <i class="fas fa-power-off text-inset"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="indicators">
+        <div class="indicator temp">
+          <h3>Температура</h3>
+          <div id="temp-value" class="big">-- °C</div>
+        </div>
+
+        <div class="indicator level">
+          <h3>Уровень воды</h3>
+          <div class="level-bar" id="level-bar">
+            <div class="level-fill" id="level-fill" style="height: 0%"></div>
+          </div>
+          <div id="level-percent">--%</div>
+        </div>
+      </div>
+    </section>
+    <section class="card logs">
+      <h2>Действия:</h2>
+      <ul id="log"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <small>ESP Aquarium Control © 2025</small>
+  </footer>
+  <script src="script.js" defer></script>
+</body>
+
+</html>

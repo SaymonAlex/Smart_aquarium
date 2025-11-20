@@ -49,7 +49,9 @@ const hueText = document.getElementById("hue-value");
 const brightnessText = document.getElementById("brightness-value");
 const ledStrip = document.getElementById("led-strip");
 const tempValue = document.getElementById("temp-value");
+const field_temp = document.getElementById("field_temp");
 const levelFill = document.getElementById("level-fill");
+const field_level = document.getElementById("field_level");
 const levelPercent = document.getElementById("level-percent");
 const bubblesContainer = document.getElementById("bubbles");
 const logEl = document.getElementById("log");
@@ -57,6 +59,11 @@ const logEl = document.getElementById("log");
 let localLight = { on: 0, hue: 200, brightness: 100 };
 let localPump = 0;
 let PumpStatus = 0;
+
+let sound_voice = false;
+let utterance = null;
+let temp_val = 0; 
+let water_val = 0;
 
 // ================ Light UI Update ===============
 function updateStrip() {
@@ -71,6 +78,17 @@ function updateStrip() {
   });
 }
 
+// ---------------------Sound assistant Speak-------------------
+setTimeout(() => {
+  sound_voice = true;
+}, 6000);
+
+function speak(text) {
+  if (!sound_voice) return;
+  speechSynthesis.cancel();
+  utterance = new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(utterance);
+}
 // ---------------------- Инициализация ------------------------
 function initApp() {
 // ✅ Запросы в Firebase
@@ -147,6 +165,7 @@ db.ref(PATH.WIFIVAL).on("value", snap => {
     lightToggle.classList.toggle("btn-pressed", status);
     updateStrip();
     log(`Свет: ${status ? "ВКЛ" : "ВЫКЛ"}`);
+    speak(status ? "Подсветка аквариума включена" : "Подсветка аквариума выключена");
   });
 
   // ---------Только hue и brightness-----------
@@ -169,11 +188,13 @@ db.ref(PATH.WIFIVAL).on("value", snap => {
     PumpStatus = (v == 1);
     updatePump();
     log(`Помпа ${PumpStatus ? "вкл" : "выкл"}`);
+    speak(v ? "Аквариум воздух включен" : "Аквариум воздух выключен");
   });
 
 // --------------Температура----------------
 db.ref(PATH.TEMP).on("value", snap => {
   const t = snap.val();
+  temp_val = t;
   tempValue.textContent = (t != null) ? `${Number(t).toFixed(1)} °C` : "--°C";
 });
 
@@ -183,10 +204,68 @@ db.ref(PATH.LEVEL).on("value", snap => {
   const perc = Math.max(0, Math.min(100, lvl));
   levelFill.style.height = `${perc}%`;
   levelPercent.textContent = `${perc}%`;
+  water_val = perc;
+  if (perc > 70) {
+    speak("В аквариуме уровень воды, в норме");
+  } else {
+    speak("В аквариуме, низкий уровень воды");
+  }
 });
 
 }
 // -------------- END of initApp--------------
+
+// ------------Озвучка температуры и воды-----------
+// Температура
+function formatTemperature(temp) {
+  // Превращаем строку "5,5" → 5.5
+  const t = parseFloat(temp.toString().replace(',', '.'));
+
+  const whole = Math.floor(t);
+  const frac = Math.round((t - whole) * 10); // одна цифра после запятой
+
+  let degreeWord =
+    (whole % 10 === 1 && whole % 100 !== 11) ? "градус" :
+      ([2, 3, 4].includes(whole % 10) && ![12, 13, 14].includes(whole % 100)) ? "градуса" :
+        "градусов";
+
+  if (frac > 0) {
+    return `${whole} целых ${frac} десятых ${degreeWord}`;
+  } else {
+    return `${whole} ${degreeWord}`;
+  }
+}
+
+field_temp.addEventListener("click", () => {
+  speak(`Температура воды в аквариуме ${formatTemperature(temp_val)}`);
+});
+
+//Вода
+function formatPercent(value) {
+  const t = parseFloat(value.toString().replace(',', '.'));
+  const whole = Math.floor(t);
+  const frac = Math.round((t - whole) * 10); // одна цифра после запятой
+  let percentWord =
+    (whole % 10 === 1 && whole % 100 !== 11) ? "процент" :
+      ([2, 3, 4].includes(whole % 10) && ![12, 13, 14].includes(whole % 100)) ? "процента" :
+        "процентов";
+
+  if (frac > 0) {
+    return `${whole} целых ${frac} десятых ${percentWord}`;
+  } else {
+    return `${whole} ${percentWord}`;
+  }
+}
+
+field_level.addEventListener("click", () => {
+  if (water_val > 70) {
+    speak(`В аквариуме уровень воды, в норме, ${formatPercent(water_val)}`);
+  } else {
+    speak(`В аквариуме, низкий уровень воды, ${formatPercent(water_val)}`);
+  }
+});
+
+
 
 // ---------- Bubbles ----------
 function spawnBubble() {

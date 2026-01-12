@@ -1,4 +1,4 @@
-const CACHE_NAME = 'esp-ui-v2';
+const CACHE_NAME = 'esp-ui-v3';
 const FILES_TO_CACHE = [
   './',
   './index.html',
@@ -39,5 +39,6 @@ self.addEventListener('activate', e => {
 //       .catch(() => caches.match(e.request).then(r => r || caches.match('./offline.html')))
 //   );
 // });
+
 
 

@@ -188,6 +188,14 @@ main {
   margin-left: 78px;
 }
 
+.up_button {
+  background: #00ff88;
+  border: none;
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
 /* ============Button========== */
 button {

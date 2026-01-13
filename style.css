@@ -373,7 +373,8 @@ button {
   width: 50px;
   height: 120px;
   background: rgba(255, 255, 255, 0.04);
-  border-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.03);
   display: block !important;

@@ -1,14 +1,16 @@
-const CACHE_NAME = 'esp-ui-v4';
+const CACHE_NAME = 'esp-ui-v5';
+
 const FILES_TO_CACHE = [
   './',
   './index.html',
   './style.css',
   './app.js',
+  './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];
 
-// Установка SW
+// Установка Service Worker
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
@@ -16,15 +18,18 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 
-// Активация SW и удаление старого кэша
+// Активация и удаление старых кэшей
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.map(key => key !== CACHE_NAME && caches.delete(key)))
+      Promise.all(
+        keys.map(key => key !== CACHE_NAME && caches.delete(key))
+      )
     )
   );
   self.clients.claim();
 });
+
 
 // Стратегия "Cache then Network"
 // self.addEventListener('fetch', e => {

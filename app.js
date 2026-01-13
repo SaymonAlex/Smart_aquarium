@@ -1,12 +1,7 @@
 
 // --- Кнопка для обновления ---
-const updateBtn = document.createElement('up_button');
-updateBtn.textContent = 'Обновить приложение';
-updateBtn.style.fontSize = '16px';
-updateBtn.style.padding = '5px 10px';
-updateBtn.style.marginTop = '20px';
-updateBtn.style.display = 'none'; // скрыта по умолчанию
-document.body.appendChild(updateBtn);
+const update_app = document.getElementById('update_app');
+update_app.style.display = 'none'; // скрыта по умолчанию
 
 // --- Service Worker регистрация ---
 if ('serviceWorker' in navigator) {
@@ -17,7 +12,7 @@ if ('serviceWorker' in navigator) {
       newWorker.onstatechange = () => {
         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
           // Новый контент доступен
-          updateBtn.style.display = 'block';
+          update_app.style.display = 'flex';
         }
       };
     };
@@ -25,8 +20,9 @@ if ('serviceWorker' in navigator) {
 }
 
 // При клике на кнопку обновления
-updateBtn.onclick = () => {
+update_app.onclick = () => {
   window.location.reload(); // перезагрузка страницы и активация нового SW
+  speak("Приложение обновлено");
 };
 
 // --- Тут твой код управления LED и температурой ---

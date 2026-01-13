@@ -3,6 +3,8 @@ const CACHE_NAME = 'esp-ui-v5';
 const FILES_TO_CACHE = [
   './',
   './index.html',
+  './all.min.css',
+  './loader.css',
   './style.css',
   './app.js',
   './manifest.json',

@@ -94,6 +94,8 @@ let utterance = null;
 let temp_val = 0; 
 let water_val = 0;
 
+let firstLoadDone = false;
+
 // ================ Light UI Update ===============
 function updateStrip() {
   ledStrip.style.setProperty("--hue", localLight.hue);
@@ -110,7 +112,7 @@ function updateStrip() {
 // ---------------------Sound assistant Speak-------------------
 setTimeout(() => {
   sound_voice = true;
-}, 6000);
+}, 8000);
 
 function speak(text) {
   if (!sound_voice) return;
@@ -225,6 +227,11 @@ db.ref(PATH.TEMP).on("value", snap => {
   const t = snap.val();
   temp_val = t;
   tempValue.textContent = (t != null) ? `${Number(t).toFixed(1)} °C` : "--°C";
+
+  if (!firstLoadDone) {
+    firstLoadDone = true;
+    showLoader(false);
+  }
 });
 
 // --------------Уровень воды----------------
@@ -243,6 +250,26 @@ db.ref(PATH.LEVEL).on("value", snap => {
 
 }
 // -------------- END of initApp--------------
+
+
+function showLoader(state) {
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
+
+  if (state) {
+    loader.style.display = "flex";
+    content.style.display = "none";
+    content.style.opacity = 0;
+  } else {
+    loader.style.display = "none";
+    content.style.display = "block";
+
+    requestAnimationFrame(() => {
+      content.style.opacity = 1;
+    });
+  }
+}
+
 
 // ------------Озвучка температуры и воды-----------
 // Температура

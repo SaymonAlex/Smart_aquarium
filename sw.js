@@ -32,17 +32,11 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-
-// Стратегия "Cache then Network"
-// self.addEventListener('fetch', e => {
-//   e.respondWith(
-//     fetch(e.request)
-//       .then(res => {
-//         // Если есть ответ от сервера, сохраняем его в кэш
-//         const resClone = res.clone();
-//         caches.open(CACHE_NAME).then(cache => cache.put(e.request, resClone));
-//         return res;
-//       })
-//       .catch(() => caches.match(e.request).then(r => r || caches.match('./offline.html')))
-//   );
-// });
+// 🔥 главное
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(res => {
+      return res || fetch(e.request);
+    })
+  );
+});

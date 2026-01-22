@@ -1,11 +1,19 @@
 {
+  "id": "/esp-smart-aquarium",
   "name": "ESP Aquarium PWA",
   "short_name": "Smart Аквариум",
+  "description": "Веб-интерфейс управления Аквариумом",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0b1220",
   "theme_color": "#113156",
+  "lang": "ru",
+  "categories": [
+    "smart-aquarium",
+    "iot"
+  ],
   "icons": [
     {
       "src": "./icons/icon-192.png",
